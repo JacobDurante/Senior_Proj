@@ -27,12 +27,12 @@ def main():
     # timer.init(freq=int(12e6), mode=Timer.PERIODIC, callback=DIN_IRQ)
     # timer.init(freq=int(12e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
     # timer.init(freq=int(48e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
-    timer.init(freq=int(200e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
+    timer.init(freq=int(100e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
     DATA_STREAM_MAX = 32
     DOUBLE_BUF_MAX = 15
     num_bits = 0
-    data_stream = [None] * DATA_STREAM_MAX
-    double_buffer = [None] * DOUBLE_BUF_MAX
+    data_stream = ["X"] * DATA_STREAM_MAX
+    double_buffer = ["X"] * DOUBLE_BUF_MAX
     buf = 0
     while True:
         if FLAG == 1:
@@ -51,7 +51,7 @@ def main():
                 num_bits = 0
 
             if buf >= DOUBLE_BUF_MAX:
-                print("buffer full")
+                # print("buffer full")
                 buf_out = '\n'.join(double_buffer)
                 print(buf_out)
                 buf = 0
