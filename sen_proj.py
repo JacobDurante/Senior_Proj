@@ -60,6 +60,8 @@ def main():
                 # print("double_buff incr")
                 buf += 1
                 num_bits = 0
+                # resets data_stream so only new values are saved
+                data_stream = ["X"] * DATA_STREAM_MAX
 
             if buf >= DOUBLE_BUF_MAX:
                 # print("buffer full")
@@ -70,6 +72,8 @@ def main():
                 # print(end-start)
                 # start = time.time()
                 buf = 0
+                # resets double_buffer so only new values are saved
+                double_buffer = ["X"] * DOUBLE_BUF_MAX
 
             FLAG = 0
 
