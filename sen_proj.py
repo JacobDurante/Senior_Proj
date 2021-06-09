@@ -15,10 +15,17 @@ from machine import Pin, Timer
 # import rp2 
 # import time
 
-# # SET GLOBAL FLAGS
+# # SET GLOBAL FLAGS / CONSTANTS
 FLAG = 0
 DATA = 0
-DataIn_Pin = Pin(0, Pin.IN, Pin.PULL_DOWN)
+DIN_PIN = 0
+DIN_IRQ_FREQ = 90e3
+GHZ_PIN = 7
+MHZ_PIN = 8
+DATA_STREAM_MAX = 32
+DOUBLE_BUF_MAX = 15
+DataIn_Pin = Pin(DIN_PIN, Pin.IN, Pin.PULL_DOWN)
+
 
 def main():
     global FLAG
@@ -29,9 +36,7 @@ def main():
     # without doing anything else
     # to provide enough time to do other operations
     # set interrupt frequency to below 90kHz
-    timer.init(freq=int(90e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
-    DATA_STREAM_MAX = 32
-    DOUBLE_BUF_MAX = 15
+    timer.init(freq=int(DIN_IRQ_FREQ), mode=Timer.PERIODIC, callback=DIN_IRQ)
     num_bits = 0
     data_stream = ["X"] * DATA_STREAM_MAX
     double_buffer = ["X"] * DOUBLE_BUF_MAX
@@ -76,8 +81,8 @@ def DIN_IRQ(timer):
 
 def Setup():
     # machine.freq(int(200e+6)) # sets clk frequency
-    GHz = Pin(7, Pin.OUT) # sets 2.4 GHz start to GP6
-    MHz = Pin(8, Pin.OUT) # sets 915 MHz start to GP7
+    GHz = Pin(GHZ_PIN, Pin.OUT) # sets 2.4 GHz start to GP6
+    MHz = Pin(MHZ_PIN, Pin.OUT) # sets 915 MHz start to GP7
     GHz.high()
     MHz.high()
 
