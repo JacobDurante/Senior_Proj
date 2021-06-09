@@ -38,8 +38,12 @@ def main():
     # set interrupt frequency to below 90kHz
     timer.init(freq=int(DIN_IRQ_FREQ), mode=Timer.PERIODIC, callback=DIN_IRQ)
     num_bits = 0
-    data_stream = ["X"] * DATA_STREAM_MAX
-    double_buffer = ["X"] * DOUBLE_BUF_MAX
+    # create empty buffers
+    empty_data_stream = ["X"] * DATA_STREAM_MAX
+    empty_double_buffer = ["X"] * DOUBLE_BUF_MAX
+    # fill the buffers with the empty buffer lists
+    data_stream = empty_data_stream
+    double_buffer = empty_double_buffer
     buf = 0
     # start = time.time()
     while True:
@@ -61,7 +65,7 @@ def main():
                 buf += 1
                 num_bits = 0
                 # resets data_stream so only new values are saved
-                data_stream = ["X"] * DATA_STREAM_MAX
+                data_stream = empty_data_stream
 
             if buf >= DOUBLE_BUF_MAX:
                 # print("buffer full")
@@ -73,7 +77,7 @@ def main():
                 # start = time.time()
                 buf = 0
                 # resets double_buffer so only new values are saved
-                double_buffer = ["X"] * DOUBLE_BUF_MAX
+                double_buffer = empty_double_buffer
 
             FLAG = 0
 
