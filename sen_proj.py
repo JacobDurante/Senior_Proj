@@ -12,8 +12,8 @@
 #         if flag = 1:
 #             print(data)
 from machine import Pin, Timer
-import rp2 
-import time
+# import rp2 
+# import time
 
 # # SET GLOBAL FLAGS
 FLAG = 0
@@ -24,26 +24,32 @@ def main():
     global FLAG
     Setup()
     timer = Timer()
-    # timer.init(freq=int(12e6), mode=Timer.PERIODIC, callback=DIN_IRQ)
-    # timer.init(freq=int(12e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
-    # timer.init(freq=int(48e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
-    timer.init(freq=int(100e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
+    # it takes about 10 us to do a read, 
+    # fastest interrupt time is 100kHz
+    # without doing anything else
+    # to provide enough time to do other operations
+    # set interrupt frequency to below 90kHz
+    timer.init(freq=int(90e3), mode=Timer.PERIODIC, callback=DIN_IRQ)
     DATA_STREAM_MAX = 32
     DOUBLE_BUF_MAX = 15
     num_bits = 0
     data_stream = ["X"] * DATA_STREAM_MAX
     double_buffer = ["X"] * DOUBLE_BUF_MAX
     buf = 0
+    # start = time.time()
     while True:
         if FLAG == 1:
             # print(DATA)
+            # print("DATA COMING IN")
             if num_bits < DATA_STREAM_MAX: 
                 data_stream[num_bits] = str(DATA)
                 num_bits += 1
             else:
                 data_stream_str = "".join(data_stream)
-                # data_string = "%s %s %s %s" %(data_stream_str[0:4], data_stream_str[4:8], data_stream_str[8:12], data_stream_str[12:16])
-                data_string = "%s %s %s %s" %(data_stream_str[0:8], data_stream_str[8:16], data_stream_str[16:24], data_stream_str[24:32])
+                data_string_list = []
+                for i in range(0, len(data_stream_str), 8):
+                    data_string_list.append(data_stream_str[i:i+8])
+                data_string = " ".join(data_string_list)
                 # print(data_string)
                 double_buffer[buf] = data_string
                 # print("double_buff incr")
@@ -52,8 +58,12 @@ def main():
 
             if buf >= DOUBLE_BUF_MAX:
                 # print("buffer full")
+                # end = time.time()
                 buf_out = '\n'.join(double_buffer)
                 print(buf_out)
+                
+                # print(end-start)
+                # start = time.time()
                 buf = 0
 
             FLAG = 0
