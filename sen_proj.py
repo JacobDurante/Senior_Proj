@@ -71,6 +71,7 @@ def main():
                 # print("buffer full")
                 # end = time.time()
                 buf_out = '\n'.join(double_buffer)
+                print("\n\nData Output:\n\n")
                 print(buf_out)
                 
                 # print(end-start)
